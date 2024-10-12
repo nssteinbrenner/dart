@@ -1,8 +1,8 @@
 # Dart
 
-Dart is a Neovim plugin designed to make interacting with buffer local marks similar to what it's like to interact files using ThePrimeagen's [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2).
+Dart is a Neovim plugin designed to create an alternative to buffer local marks similar to what it's like to interact files using ThePrimeagen's [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2).
 
-I thought marks were a good idea, but I didn't like the mental overhead of trying to think of which button to put the mark on as I placed it, and keeping track of where all the marks were.
+I thought marks were a good idea, but I didn't like the mental overhead of trying to think of which button to put the mark on as I placed it, and keeping track of where all the marks were in the file.
 
 So instead, I set this up so that when I add a mark, it's simply appended to an array. Then I can setup hotkeys to select indexes, or go to the next or previous index and so on.
 
