@@ -1,4 +1,4 @@
-# dart
+# Dart
 
 Dart is a NeoVim Plugin designed to make itneracting with buffer local marks similar to what it's like to interact files using ThePrimeagen's [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2).
 
