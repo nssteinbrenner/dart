@@ -13,6 +13,9 @@ I use Lazy as the package manager. Here is my setup:
 return {
     "nssteinbrenner/dart",
     branch = "master",
+    dependencies = {
+        { "nvim-lua/plenary.nvim" },
+    },
 
     config = function()
         local dart = require("dart")
