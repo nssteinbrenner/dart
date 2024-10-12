@@ -8,8 +8,8 @@ So instead, I set this up so that when I add a mark, it's simply appended to an 
 
 ## Installation
 
-I use Lazy. Here is my setup:
-```
+I use Lazy as the package manager. Here is my setup:
+```lua
 return {
     "nssteinbrenner/dart",
     branch = "master",
@@ -33,4 +33,4 @@ return {
         vim.keymap.set("n", "<A-S-N>", function() dart:list():next() end)
     end,
 }
-```lua
+```
