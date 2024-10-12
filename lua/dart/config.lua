@@ -1,11 +1,30 @@
+---@class DartDataConfig
+---@field key (fun(): string)
+---@field base_path string
+---@field filename string
+
+---@class DartListConfig
+---@field max_darts number
+
 ---@class DartConfig
----@field max_darts? number
+---@field data DartDataConfig
+---@field list DartListConfig
 
 local M = {}
 
+---@return DartConfig
 function M.get_default_config()
     return {
-        max_darts = 20
+        data = {
+            key = function()
+                return vim.loop.cwd()
+            end,
+            base_path = nil,
+            filename = "data.json",
+        },
+        list = {
+            max_darts = 20
+        },
     }
 end
 
