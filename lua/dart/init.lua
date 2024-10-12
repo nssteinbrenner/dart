@@ -2,6 +2,7 @@ local Config = require("dart.config")
 local Data = require("dart.data")
 local Extensions = require("dart.extensions")
 local List = require("dart.lists")
+local Ui = require("dart.ui")
 
 ---@class Dart
 ---@field config DartConfig
@@ -52,6 +53,7 @@ function Dart:new()
         config = config,
         data = data,
         lists = get_lists(config, data),
+        ui = Ui:new(),
     }, self)
     sync_on_change(dart)
 

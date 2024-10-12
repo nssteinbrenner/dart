@@ -2,13 +2,13 @@ local Extensions = require("dart.extensions")
 
 ---@return boolean
 local function is_valid_location(location)
-    vim.print(location)
+    -- vim.print(location)
     return location[1] ~= nil and location[1] ~= 0
 end
 
 
 ---@class DartLocation
----@field [1] number line
+---@field [1] number row
 ---@field [2] number col
 
 ---@class DartList
@@ -21,7 +21,7 @@ DartList.__index = DartList
 
 ---@return DartList
 function DartList:new(config, items)
-    items = items or {} -- or get_darts(20)
+    items = items or {}
     return setmetatable({
         config = config,
         items = items,
@@ -49,8 +49,8 @@ function DartList:add()
     else
         self._index = (self._index % self.config.list.max_darts) + 1
         self.items[self._index] = location
+        table.insert(self.items, self._index, location)
     end
-    table.insert(self.items, self._index, location)
 
     Extensions.extensions:emit(
         Extensions.event_names.ADD,
@@ -82,13 +82,13 @@ function DartList:jump()
     local end_of_file = vim.api.nvim_buf_line_count(0)
     local dest_dart = self.items[self._index]
     if dest_dart[1] > end_of_file then
-        vim.print("4")
+        -- vim.print("4")
         dest_dart[1] = end_of_file
         self.items[self._index] = dest_dart
     end
 
     if is_valid_location(dest_dart) then
-        vim.print("5")
+        -- vim.print("5")
         vim.api.nvim_win_set_cursor(0, dest_dart)
         vim.cmd.normal("zz")
         return true
@@ -99,13 +99,13 @@ end
 ---@return boolean
 function DartList:select(index)
     if self:length() == 0 then
-        vim.print("1")
+        -- vim.print("1")
         return false
     end
 
-    vim.print("2")
+    -- vim.print("2")
     if index < 1 or index > self:length() then
-        vim.print("3")
+        -- vim.print("3")
         return false
     end
 
@@ -139,6 +139,10 @@ function DartList:prev()
         self._index = self._index - 1
     end
     return self:jump()
+end
+
+function DartList:clear()
+    self.items = {}
 end
 
 ---@return DartList
