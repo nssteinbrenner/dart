@@ -1,7 +1,8 @@
 local Buffer = require("dart.buffer")
-local Extensions = require("dart.extensions")
+local Events = require("dart.events")
 
 ---@class DartUI
+---@field config DartUiConfig
 ---@field win_id number
 ---@field bufnr number
 ---@field active_list DartList
@@ -10,14 +11,17 @@ local DartUI = {}
 DartUI.__index = DartUI
 
 ---@return DartUI
-function DartUI:new()
+---@param config DartUiConfig
+function DartUI:new(config)
     return setmetatable({
+        config = config,
         win_id = nil,
         bufnr = nil,
         active_list = nil,
     }, self)
 end
 
+---@return nil
 function DartUI:close_menu()
     if self.closing then
         return
@@ -40,14 +44,14 @@ function DartUI:close_menu()
     self.closing = false
 end
 
----@return number,number
+---@return number, number
 function DartUI:_create_window()
     local win = vim.api.nvim_list_uis()
 
-    local width = 80.085
+    local width = 69.420
 
     if #win > 0 then
-        width = math.floor(win[1].width * 0.69420)
+        width = math.floor(win[1].width * 0.8008135)
     end
 
     local height = 8
@@ -64,7 +68,7 @@ function DartUI:_create_window()
         border = "single",
     })
 
-    Buffer.setup_autocmds_and_keymaps(bufnr)
+    Buffer.setup_autocmds_and_keymaps(bufnr, self)
 
     self.win_id = win_id
     vim.api.nvim_set_option_value("number", true, {
@@ -75,6 +79,7 @@ function DartUI:_create_window()
 end
 
 ---@param list? DartList
+---@return nil
 function DartUI:toggle_quick_menu(list)
     if list == nil or self.win_id ~= nil then
         self:close_menu()
@@ -85,24 +90,20 @@ function DartUI:toggle_quick_menu(list)
     self.win_id = win_id
     self.bufnr = bufnr
     self.active_list = list
-    local contents = {}
-    for i = 1, #list.items do
-        local entry = (
-            tostring(i) .. ": " .. tostring(list.items[i][1]) .. ", " .. tostring(list.items[i][2])
-        )
-        table.insert(contents, entry)
-    end
+    local contents = self.config.format_darts(list)
 
     vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, contents)
 end
 
+---@return string[], number
 function DartUI:_get_processed_ui_contents()
-    local list = Buffer.get_contents(self.bufnr)
+    local list = Buffer.get_contents(self.bufnr, self)
     local length = #list
     return list, length
 end
 
 ---@param options? any
+---@return nil
 function DartUI:select_menu_item(options)
     local idx = vim.fn.line(".")
 
@@ -110,29 +111,31 @@ function DartUI:select_menu_item(options)
     -- navigating
     self:save()
 
-    list = self.active_list
+    local list = self.active_list
     self:close_menu()
     list:select(idx)
 end
 
+---@return nil
 function DartUI:save()
     local list, length = self:_get_processed_ui_contents()
-
-    -- Clear the current items in the active list
     self.active_list.items = {}
 
     for i = 1, length do
         local line = list[i]
-        -- Assuming the format is 'index: row, col'
-        local row_num, col_num = line:match("%d+:%s*(%d+),%s*(%d+)")
+        local row_num, col_num = line:match(self.config.regex_format)
 
         if row_num and col_num then
             table.insert(self.active_list.items, { tonumber(row_num), tonumber(col_num) })
         end
     end
 
-    -- Update the list's _index
     self.active_list._index = #self.active_list.items > 0 and 1 or 0
+
+    Events.events:emit(
+        Events.event_names.UI_SAVE,
+        { list = self.active_list }
+    )
 end
 
 return DartUI

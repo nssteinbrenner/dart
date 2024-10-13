@@ -1,8 +1,7 @@
-local Extensions = require("dart.extensions")
+local Events = require("dart.events")
 
 ---@return boolean
 local function is_valid_location(location)
-    -- vim.print(location)
     return location[1] ~= nil and location[1] ~= 0
 end
 
@@ -12,7 +11,7 @@ end
 ---@field [2] number col
 
 ---@class DartList
----@field config DartConfig
+---@field config DartListConfig
 ---@field items DartLocation[]
 ---@field _index number
 local DartList = {}
@@ -20,6 +19,8 @@ local DartList = {}
 DartList.__index = DartList
 
 ---@return DartList
+---@param config DartListConfig
+---@param items? DartLocation[]
 function DartList:new(config, items)
     items = items or {}
     return setmetatable({
@@ -34,26 +35,27 @@ function DartList:length()
     return #self.items
 end
 
+---@return nil
 function DartList:add()
     local location = vim.api.nvim_win_get_cursor(0)
-    if #self.items > self.config.list.max_darts then
-        for i = self.config.list.max_darts, #self.items do
+    if #self.items > self.config.max_darts then
+        for i = self.config.max_darts, #self.items do
             table.remove(self.items, i)
         end
         self._index = #self.items
     end
 
-    if #self.items < self.config.list.max_darts then
+    if #self.items < self.config.max_darts then
         table.insert(self.items, location)
         self._index = #self.items
     else
-        self._index = (self._index % self.config.list.max_darts) + 1
+        self._index = (self._index % self.config.max_darts) + 1
         self.items[self._index] = location
         table.insert(self.items, self._index, location)
     end
 
-    Extensions.extensions:emit(
-        Extensions.event_names.ADD,
+    Events.events:emit(
+        Events.event_names.ADD,
         { list = self, item = location, idx = self._index }
     )
 end
@@ -61,7 +63,7 @@ end
 ---@return boolean
 function DartList:insert(index)
     local location = vim.api.nvim_win_get_cursor(0)
-    if index < self.config.list.max_darts then
+    if index < self.config.max_darts then
         table.insert(self.items, index, location)
         return true
     end
@@ -82,15 +84,16 @@ function DartList:jump()
     local end_of_file = vim.api.nvim_buf_line_count(0)
     local dest_dart = self.items[self._index]
     if dest_dart[1] > end_of_file then
-        -- vim.print("4")
         dest_dart[1] = end_of_file
         self.items[self._index] = dest_dart
     end
 
     if is_valid_location(dest_dart) then
-        -- vim.print("5")
         vim.api.nvim_win_set_cursor(0, dest_dart)
-        vim.cmd.normal("zz")
+        if self.config.center_cursor_on_jump then
+            vim.print(self.config.center_cursor_on_jump)
+            vim.cmd.normal("zz")
+        end
         return true
     end
     return false
@@ -99,17 +102,20 @@ end
 ---@return boolean
 function DartList:select(index)
     if self:length() == 0 then
-        -- vim.print("1")
         return false
     end
 
-    -- vim.print("2")
     if index < 1 or index > self:length() then
-        -- vim.print("3")
         return false
     end
 
     self._index = index
+
+    Events.events:emit(
+        Events.event_names.SELECT,
+        { list = self, item = self.items[self._index], idx = self._index }
+    )
+
     return self:jump()
 end
 
@@ -141,21 +147,9 @@ function DartList:prev()
     return self:jump()
 end
 
+---@return nil
 function DartList:clear()
     self.items = {}
-end
-
----@return DartList
----@param config DartConfig
----@param items DartLocation[]
-function DartList.Decode(config, items)
-    local list_items
-
-    for _, item in ipairs(items) do
-        table.insert(list_items, vim.json.decode(item))
-    end
-
-    return DartList:new(config, list_items)
 end
 
 return DartList

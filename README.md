@@ -7,8 +7,9 @@ I thought marks were a good idea, but I didn't like the mental overhead of tryin
 So instead, I set this up so that when I add a mark, it's simply appended to an array. Then I can setup hotkeys to select indexes, or go to the next or previous index and so on.
 
 ## Installation
+Installation depends on your chosen package manager. Below is an example for Lazy.
 
-I use Lazy as the package manager. Here is my setup:
+Lazy:
 ```lua
 return {
     "nssteinbrenner/dart",
@@ -18,7 +19,9 @@ return {
     },
 
     config = function()
-        local dart = require("dart")
+        -- .setup() is required.
+        -- Can be specified with config. Otherwise uses defaults
+        local dart = require("dart").setup()
 
         -- Add a dart
         vim.keymap.set("n", "<A-a>", function() dart:list():add() end)
