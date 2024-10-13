@@ -61,7 +61,7 @@ local dart = require("dart").setup({
 ```
 
 If you dislike how the darts are formatted in the UI, you are able to edit them by supplying custom functions to the configuration.
-By default, they are formatted as <Index>: <Row>, <Col>.
+By default, they are formatted as `<Index>: <Row>, <Col>`.
 The only requirement is that it includes the row and column number, and that those are correctly parsed by the regex_format string so that `local row_num, col_num = line:match(self.config.regex_format)` correctly assigns the row and column number.
 Defaults:
 ```lua
