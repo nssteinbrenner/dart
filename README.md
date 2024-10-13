@@ -105,7 +105,7 @@ ui = {
 ```
 
 ## Usage
-You must setup your hotkeys as shown in the configuration section.
+You will need to setup your preferred keybinds in order to work with this plugin. See my personal configuration above in the configuration section.
 
 Using the previous example in the configuration section, now you can add wherever your cursor currently is to the array of darts with `Alt-a`.
 
