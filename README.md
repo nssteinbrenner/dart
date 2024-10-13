@@ -31,6 +31,8 @@ return {
 Setup keybinds as part of your installation:
 
 ```lua
+local dart = require("dart").setup()
+
 -- Add to the array of locations
 vim.keymap.set("n", "<A-a>", function() dart:list():add() end)
 -- Open the UI to manage locations
