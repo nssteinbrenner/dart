@@ -10,7 +10,7 @@ local DartEvents = {}
 
 DartEvents.__index = DartEvents
 
----@return nil
+---@return DartEvents
 function DartEvents:new()
     return setmetatable({
         listeners = {}
@@ -42,7 +42,6 @@ end
 local events = DartEvents:new()
 
 return {
-    ---@type DartEvents
     events = events,
     event_names = {
         ADD = "ADD",

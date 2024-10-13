@@ -14,6 +14,7 @@ Lazy:
 return {
     "nssteinbrenner/dart",
     branch = "master",
+    tag = "v1.0.0",
     dependencies = {
         { "nvim-lua/plenary.nvim" },
     },
