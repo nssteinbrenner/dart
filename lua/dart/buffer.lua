@@ -28,7 +28,6 @@ end
 ---@param dart_ui DartUI
 ---@return nil
 function M.setup_autocmds_and_keymaps(bufnr, dart_ui)
-    vim.print(dart_ui)
     if vim.api.nvim_buf_get_name(bufnr) == "" then
         vim.api.nvim_buf_set_name(bufnr, get_dart_menu_name())
     end

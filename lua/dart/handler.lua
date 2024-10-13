@@ -1,6 +1,6 @@
 local Data = require("dart.data")
 local Events = require("dart.events")
-local List = require("dart.lists")
+local List = require("dart.list")
 local Ui = require("dart.ui")
 
 ---@class DartHandler

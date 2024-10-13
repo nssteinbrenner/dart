@@ -97,7 +97,7 @@ end
 
 ---@return string[], number
 function DartUI:_get_processed_ui_contents()
-    local list = Buffer.get_contents(self.bufnr, self)
+    local list = Buffer.get_contents(self.bufnr)
     local length = #list
     return list, length
 end

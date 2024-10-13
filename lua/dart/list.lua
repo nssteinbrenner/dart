@@ -91,7 +91,6 @@ function DartList:jump()
     if is_valid_location(dest_dart) then
         vim.api.nvim_win_set_cursor(0, dest_dart)
         if self.config.center_cursor_on_jump then
-            vim.print(self.config.center_cursor_on_jump)
             vim.cmd.normal("zz")
         end
         return true

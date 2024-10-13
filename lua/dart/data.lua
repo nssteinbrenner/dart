@@ -1,6 +1,6 @@
 local Path = require("plenary.path")
 
---- Format { index: [row, col] }
+-- Format { index: [row, col] }
 ---@alias DartRawData {[string]: DartLocation[]}
 
 ---@class DartData

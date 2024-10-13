@@ -42,6 +42,7 @@ end
 local events = DartEvents:new()
 
 return {
+    ---@type DartEvents
     events = events,
     event_names = {
         ADD = "ADD",
