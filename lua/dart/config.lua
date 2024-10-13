@@ -43,7 +43,7 @@ function M.get_default_config()
             regex_format = "%d+:%s*(%d+),%s*(%d+)",
 
             -- Used to determine the format of the darts in the quick menu
-            -- Default is: <Index>: <Line>, <Col>
+            -- Default is: <Index>: <Row>, <Col>
             ---@return string[]
             ---@param list DartList
             format_darts = function(list)
