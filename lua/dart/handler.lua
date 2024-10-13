@@ -6,7 +6,7 @@ local Ui = require("dart.ui")
 ---@class DartHandler
 ---@field config DartConfig
 ---@field data DartData
----@field lists {[string]: DartList[]}
+---@field lists {[string]: DartList}
 local DartHandler = {}
 
 DartHandler.__index = DartHandler
